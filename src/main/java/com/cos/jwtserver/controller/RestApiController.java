@@ -35,4 +35,22 @@ public class RestApiController {
         userRepository.save(user);
         return "회원가입 완료";
     }
+
+    // User 권한만 접근 가능
+    @GetMapping("/api/v1/user")
+    public String user() {
+        return "<h1>User</h1>";
+    }
+
+    // Admin, Manager 권한만 접근 가능
+    @GetMapping("/api/v1/manager")
+    public String manager() {
+        return "<h1>Manager</h1>";
+    }
+
+    // Admin 권한만 접근 가능
+    @GetMapping("/api/v1/admin")
+    public String admin() {
+        return "<h1>Admin</h1>";
+    }
 }
