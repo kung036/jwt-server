@@ -1,10 +1,13 @@
 package com.cos.jwtserver.config;
 
+import com.cos.jwtserver.JwtAuthenticationFilter;
 import com.cos.jwtserver.filter.MyFilter1;
 import com.cos.jwtserver.filter.MyFilter3;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -17,6 +20,11 @@ import org.springframework.security.web.authentication.www.BasicAuthenticationFi
 @RequiredArgsConstructor
 public class SecurityConfig {
     private final CorsConfig corsConfig;
+    private final AuthenticationConfiguration authenticationConfiguration;
+    @Bean
+    public AuthenticationManager authenticationManager() throws Exception {
+        return authenticationConfiguration.getAuthenticationManager();
+    }
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -29,6 +37,7 @@ public class SecurityConfig {
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .formLogin(AbstractHttpConfigurer::disable)
                 .httpBasic(AbstractHttpConfigurer::disable)
+                .addFilter(new JwtAuthenticationFilter(authenticationManager())) // AuthenticationManager가 로그인 실행함
                 .authorizeHttpRequests(auth -> auth
                                 .requestMatchers("/api/v1/user/**").hasAnyRole("USER", "MANAGER", "ADMIN")
                                 .requestMatchers("/api/v1/manager/**").hasAnyRole("MANAGER", "ADMIN")
