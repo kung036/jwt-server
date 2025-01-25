@@ -81,12 +81,13 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 
         // HS256(RSA 방식 X)
         String jwt = JWT.create()
-                        .withSubject("cos 토큰")
-                        .withExpiresAt(new Date(System.currentTimeMillis() + (60 * 10 * 1000))) // 10분
+                        .withSubject(principalDetails.getUsername())
+                        .withExpiresAt(new Date(System.currentTimeMillis() + JwtProperties.EXPIRATION_TIME))
                         .withClaim("id", principalDetails.getUser().getId()) // 비공개 클레임
                         .withClaim("username", principalDetails.getUser().getUsername())
-                        .sign(Algorithm.HMAC256("cos"));
-        response.addHeader("Authorization", "Bearer " + jwt);
+                        .sign(Algorithm.HMAC256(JwtProperties.SECRET));
+        
+        response.addHeader(JwtProperties.HEADER_STRING, JwtProperties.TOKEN_PREFIX+jwt);
     }
 
     @Data

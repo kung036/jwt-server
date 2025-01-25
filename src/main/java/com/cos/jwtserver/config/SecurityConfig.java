@@ -1,6 +1,8 @@
 package com.cos.jwtserver.config;
 
 import com.cos.jwtserver.jwt.JwtAuthenticationFilter;
+import com.cos.jwtserver.jwt.JwtAuthorizationFilter;
+import com.cos.jwtserver.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -19,6 +21,7 @@ import org.springframework.security.web.SecurityFilterChain;
 public class SecurityConfig {
     private final CorsConfig corsConfig;
     private final AuthenticationConfiguration authenticationConfiguration;
+    private final UserRepository userRepository;
 
     @Bean
     public BCryptPasswordEncoder passwordEncoder() {
@@ -35,14 +38,15 @@ public class SecurityConfig {
         http
 //                .addFilter(new MyFilter1()) // 적용 안됨
 //                .addFilterBefore(new MyFilter3(), BasicAuthenticationFilter.class)
-                .csrf(AbstractHttpConfigurer::disable)
-                .addFilter(corsConfig.corsFilterBean()) // CORS 요청(@CrossOrigin(인증X), 시큐리티 필터에 등록 인증(O))
-                .sessionManagement(session -> session
+.csrf(AbstractHttpConfigurer::disable)
+.addFilter(corsConfig.corsFilterBean()) // CORS 요청(@CrossOrigin(인증X), 시큐리티 필터에 등록 인증(O))
+.sessionManagement(session -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .formLogin(AbstractHttpConfigurer::disable)
-                .httpBasic(AbstractHttpConfigurer::disable)
-                .addFilter(new JwtAuthenticationFilter(authenticationManager())) // AuthenticationManager가 로그인 실행함
-                .authorizeHttpRequests(auth -> auth
+.formLogin(AbstractHttpConfigurer::disable)
+.httpBasic(AbstractHttpConfigurer::disable)
+.addFilter(new JwtAuthenticationFilter(authenticationManager())) // AuthenticationManager가 로그인 실행함
+.addFilter(new JwtAuthorizationFilter(authenticationManager(), userRepository)) // AuthenticationManager 필요함
+.authorizeHttpRequests(auth -> auth
                                 .requestMatchers("/api/v1/user/**").hasAnyRole("USER", "MANAGER", "ADMIN")
                                 .requestMatchers("/api/v1/manager/**").hasAnyRole("MANAGER", "ADMIN")
                                 .requestMatchers("/api/v1/admin/**").hasAnyRole("ADMIN")
