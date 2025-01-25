@@ -23,7 +23,7 @@ public class MyFilter3 implements Filter {
             String headerAuth = req.getHeader("Authorization");
             System.out.println(headerAuth);
 
-            if(headerAuth.equals("cos")) {
+            if(headerAuth != null && headerAuth.equals("cos")) {
                 chain.doFilter(req, res); // 다음 필터 진행
             } else {
                 PrintWriter out = res.getWriter();
