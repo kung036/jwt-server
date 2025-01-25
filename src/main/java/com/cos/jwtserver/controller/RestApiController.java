@@ -12,6 +12,11 @@ public class RestApiController {
     private final BCryptPasswordEncoder passwordEncoder;
     private final UserRepository userRepository;
 
+    @GetMapping
+    public String index() {
+        return "<h1>Index</h1>";
+    }
+
     @GetMapping("home")
     public String home() {
         return "<h1>Home</h1>";
