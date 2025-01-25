@@ -1,4 +1,4 @@
-package com.cos.jwtserver;
+package com.cos.jwtserver.jwt;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;

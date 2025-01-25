@@ -1,8 +1,6 @@
 package com.cos.jwtserver.config;
 
-import com.cos.jwtserver.JwtAuthenticationFilter;
-import com.cos.jwtserver.filter.MyFilter1;
-import com.cos.jwtserver.filter.MyFilter3;
+import com.cos.jwtserver.jwt.JwtAuthenticationFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -14,7 +12,6 @@ import org.springframework.security.config.annotation.web.configurers.AbstractHt
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 
 @Configuration
 @EnableWebSecurity
