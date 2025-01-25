@@ -1,8 +1,6 @@
 package com.cos.jwtserver.filter;
 
-
 import jakarta.servlet.*;
-
 import java.io.IOException;
 
 public class MyFilter1 implements Filter {
